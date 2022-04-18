@@ -1,0 +1,16 @@
+/Users/pirux/Desktop/SequenceLange/Sequence/bin/Debug/net5.0/Sequence
+/Users/pirux/Desktop/SequenceLange/Sequence/bin/Debug/net5.0/Sequence.deps.json
+/Users/pirux/Desktop/SequenceLange/Sequence/bin/Debug/net5.0/Sequence.runtimeconfig.json
+/Users/pirux/Desktop/SequenceLange/Sequence/bin/Debug/net5.0/Sequence.runtimeconfig.dev.json
+/Users/pirux/Desktop/SequenceLange/Sequence/bin/Debug/net5.0/Sequence.dll
+/Users/pirux/Desktop/SequenceLange/Sequence/bin/Debug/net5.0/Sequence.pdb
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/Sequence.csproj.AssemblyReference.cache
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/Sequence.GeneratedMSBuildEditorConfig.editorconfig
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/Sequence.AssemblyInfoInputs.cache
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/Sequence.AssemblyInfo.cs
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/Sequence.csproj.CoreCompileInputs.cache
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/Sequence.dll
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/refint/Sequence.dll
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/Sequence.pdb
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/Sequence.genruntimeconfig.cache
+/Users/pirux/Desktop/SequenceLange/Sequence/obj/Debug/net5.0/ref/Sequence.dll

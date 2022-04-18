@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "pLDu3Gt8hDCuPQGpXdrkDc4AJj20p/B1h/nVWmctsJzon5Y0zPVtSowZsZ+Ddp3fMB4m3Emjfmhg5M3fvf2Vtg==",
+  "success": true,
+  "projectFilePath": "/Users/pirux/Desktop/SequenceLange/Sequence/Sequence.csproj",
+  "expectedPackageFiles": [
+    "/Users/pirux/.nuget/packages/microsoft.aspnetcore.app.ref/5.0.0/microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
+    "/Users/pirux/.nuget/packages/microsoft.netcore.app.host.osx-x64/5.0.16/microsoft.netcore.app.host.osx-x64.5.0.16.nupkg.sha512",
+    "/Users/pirux/.nuget/packages/microsoft.netcore.app.ref/5.0.0/microsoft.netcore.app.ref.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
