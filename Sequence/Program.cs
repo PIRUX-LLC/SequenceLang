@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.VisualBasic;
 
 namespace Sequence
@@ -19,6 +20,8 @@ namespace Sequence
         public static string varname;
         public static string varValue;
 
+        public static bool isParsing = true;
+
         static void Main(string[] args)
         {
             Console.WriteLine(Convert.ToString(args));
@@ -35,15 +38,16 @@ namespace Sequence
             {
                 //Like Python cmd line.
                 consoleCommand();
-            } else
+            }
+            else
             {
-               
+
 
                 for (int i = 0; i < args.Length; i++)
                 {
                     //Console.WriteLine(args[i]);
                     pathToFile = args[i];
-                    
+
 
                 }
 
@@ -53,7 +57,15 @@ namespace Sequence
                 foreach (var line in lines)
                 {
                     //Console.WriteLine(line);
-                    Parse(line);
+                    if (isParsing)
+                    {
+                        ParseLine(line);
+                    }
+                    else
+                    {
+
+                    }
+
                 }
 
                 //foreach (var line in text)
@@ -117,16 +129,18 @@ namespace Sequence
                     Console.WriteLine(Constants.vbNewLine + "Sequence: Error: Couldn't parse 'print' " + stage1);
 
                 }
-            } else {
+            }
+            else
+            {
                 consoleCommand();
             }
 
         }
 
-        public static void Parse(string line)
+        public static void ParseLine(string line)
         {
             //Console.WriteLine("Parsing...");
-            if(line.StartsWith("print\"") || line.StartsWith("print \"") || line.StartsWith("print "))
+            if (line.StartsWith("print\"") || line.StartsWith("print \"") || line.StartsWith("print "))
             {
                 string stage1 = line.Replace("print", "").Trim();
                 // Where it is now: ex: Started with: write "hello!" now is: "hello!"
@@ -136,23 +150,30 @@ namespace Sequence
                     lastIndexOfStage1 = lastIndexOfStage1 - 1;
                     //Console.WriteLine("Length of statement: " + lastIndexOfStage1);
                     //Console.WriteLine("Last index of \" is: " + stage1.LastIndexOf("\""));
-                    
 
-                    if(stage1.LastIndexOf("\"") != lastIndexOfStage1)
+
+                    if (stage1.LastIndexOf("\"") != lastIndexOfStage1)
                     {
-                        try
+
+                        if (stage1.EndsWith("\""))
                         {
                             Console.WriteLine(strings[stage1].ToString().Trim());
-
-                        }
-                        catch (Exception ex)
+                        } else if (int.TryParse(stage1, out int varContentsInt))
                         {
-                            
-                            Console.WriteLine(Constants.vbNewLine + "Sequence: Error: Couldn't parse 'print' " + stage1 + " because missing \".");
-                            //output.AppendText(Constants.vbNewLine + "Snowy: Error! Couldn't parse 'print' " + stage1 + ". Maybe the string variable dosen't exist?");
+                            Console.WriteLine(integers[stage1].ToString().Trim());
+
+                        } else {
+                            Console.WriteLine(booleans[stage1].ToString().Trim());
                         }
-                        
-                    }
+                       
+                                    //Console.WriteLine(Constants.vbNewLine + "Sequence: Error: Couldn't parse 'print' variable " + stage1 + " because variable was non-existant in current context.");
+                                    //isParsing = false;
+                                    //output.AppendText(Constants.vbNewLine + "Snowy: Error! Couldn't parse 'print' " + stage1 + ". Maybe the string variable dosen't exist?");
+                                
+                            
+                        }
+
+                    
                     else
                     {
                         if (stage1.Contains("\""))
@@ -161,15 +182,16 @@ namespace Sequence
                             Console.WriteLine(stage2.Trim());
 
                         }
-                      
-                            
+
+
                     }
                 }
-                    
+
 
                 catch (Exception ex)
                 {
                     Console.WriteLine(Constants.vbNewLine + "Sequence: Error: Couldn't parse 'print' " + stage1);
+                    isParsing = false;
 
                 }
             }
@@ -179,7 +201,7 @@ namespace Sequence
                 //Console.Write("Adding string...");
                 string stage1 = line.Replace("string", "");
                 int commaIndex = stage1.IndexOf("=");
-                
+
 
                 try
                 {
@@ -189,7 +211,8 @@ namespace Sequence
                     else
                     {
                         Console.WriteLine(Constants.vbNewLine + "Sequence: Error! You must assign a value to a string before usage. (Can only print string variables)");
-                        
+                        isParsing = false;
+
                     }
                 }
                 catch (Exception ex)
@@ -202,13 +225,226 @@ namespace Sequence
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(Constants.vbNewLine + "Sequence: Error! While parsing 'str.var' block. You must assign a value to a variable!");
-                    
+                    Console.WriteLine(Constants.vbNewLine + "Sequence: Error! While parsing 'string' block. You must assign a value to a variable!");
+                    isParsing = false;
+
                 }
             }
 
+            else if (line.StartsWith("int "))
+            {
+
+                string stage1 = line.Replace("int", "");
+
+                string varname;
+                int equalsIndex = stage1.IndexOf("=");
+                int varValue;
+                try
+                {
+                    varname = stage1.Remove(equalsIndex).Trim();
+                    // Dim stage2 As String = stage1.Remove(0, 5).Trim
+                    varValue = int.Parse(stage1.Remove(0, equalsIndex).Replace("=", ""));
+                    integers.Add(varname, varValue);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(Constants.vbNewLine + "Sequence: Error! While parsing 'int' block. You can't assign a 'int' a string value!");
+                    isParsing = false;
+
+                }
+            }
+
+            else if (line.StartsWith("bool "))
+            {
+                // Example: bool isShylaCute = true
+                string stage1 = line.Replace("bool", "");
+                // isShylaCute = true
+                string varname;
+                string booleanValue;
+                bool booleanValueForArray;
+                int equalsPosititon = stage1.IndexOf("=");
+                varname = stage1.Remove(equalsPosititon).Trim();
+                // MsgBox("varname: " + varname)
+                booleanValue = stage1.Remove(0, equalsPosititon).Replace("=", "").Trim();
+                // MsgBox("booleanValue: " + booleanValue)
+
+                if (booleanValue == "true" | booleanValue == "false")
+                {
+                    try
+                    {
+                        if (booleanValue == "true")
+                            booleans.Add(varname.Trim(), true);
+                        else if (booleanValue == "false")
+                            booleans.Add(varname.Trim(), false);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Sequence: Error! Booleans can only be true or false.");
+                    isParsing = false;
+
+
+                }
+            }
+            else if (line.StartsWith("!!"))
+            {
+                //Ignore. Its a comment
+            }
+
+
+            else
+
+            {
+                //Console.Write("in final else block");
+
+                try
+                {
+                    //testvar = ""
+                    string varname = "";
+                    string varContents = "";
+                    int equalsPosTopLevel = line.IndexOf("=");
+                    varname = line.Remove(equalsPosTopLevel).Trim();
+                    //varname = testvar
+                    varContents = line.Remove(0, equalsPosTopLevel);
+                    //varContents is: = ""
+                    varContents = varContents.Replace("=", "").Trim();
+                    //varContents is: ""
+                    //int varContentsInt = 0;
+
+                    if (varContents.StartsWith("\"") && varContents.EndsWith("\""))
+                    {
+                        //String
+
+                        for (int i = 0; i <= strings.Count - 1; i++)
+                        {
+                            string val = strings.ElementAt(i).ToString();
+                            string stage1 = val.Replace("[", "").Replace("]", "").Replace("\"", "").Replace("str", "").Trim();
+                            // MsgBox(stage1)
+                            int commaLocation = stage1.IndexOf(",");
+                            string key = stage1.Remove(commaLocation).Replace(",", "");
+                            // MsgBox(key)
+                            int equalsPos = line.IndexOf("=");
+                            string keyValue = line.Remove(0, equalsPos).Replace("\"", "").Trim();
+                            string finalKeyValue = keyValue.Replace("=", "");
+                            // MsgBox("Final key value: " + finalKeyValue)
+                            // Dim intKeyValue As Integer
+                            // If Integer.TryParse(finalKeyValue, intKeyValue) = True Then
+                            // MsgBox("The finalKeyValue is an int.")
+                            // End If
+                            if (strings.Remove(key) == true)
+                                strings.Add(key, finalKeyValue.Trim());
+                        }
+
+
+                    }
+                    else if (int.TryParse(varContents, out int varContentsInt))
+                    {
+                        //Integer
+                        for (int i = 0; i <= integers.Count - 1; i++)
+                        {
+                            string val = integers.ElementAt(i).ToString();
+                            string stage1 = val.Replace("[", "").Replace("]", "").Replace("\"", "").Replace("str", "").Trim();
+                            // MsgBox(stage1)
+                            int commaLocation = stage1.IndexOf(",");
+                            string key = stage1.Remove(commaLocation).Replace(",", "");
+                            // MsgBox(key)
+                            int equalsPos = line.IndexOf("=");
+                            string keyValue = line.Remove(0, equalsPos).Trim();
+                            string finalKeyValue = keyValue.Replace("=", "");
+                            // MsgBox("Final key value: " + finalKeyValue)
+                            // Dim intKeyValue As Integer
+                            // If Integer.TryParse(finalKeyValue, intKeyValue) = True Then
+                            // MsgBox("The finalKeyValue is an int.")
+                            // End If
+                            if (integers.Remove(key) == true)
+                                integers.Add(key, int.Parse(finalKeyValue.Trim()));
+                        }
+
+
+
+
+                    }
+                    else
+                    {
+                        //Boolean
+
+                        for (int i = 0; i <= booleans.Count - 1; i++)
+                        {
+                            string val = booleans.ElementAt(i).ToString();
+                            string stage1 = val.Replace("[", "").Replace("]", "").Replace("\"", "").Replace("str", "").Trim();
+                            // MsgBox(stage1)
+                            int commaLocation = stage1.IndexOf(",");
+                            string key = stage1.Remove(commaLocation).Replace(",", "");
+                            // MsgBox(key)
+                            int equalsPos = line.IndexOf("=");
+                            string keyValue = line.Remove(0, equalsPos).Trim();
+                            string finalKeyValue = keyValue.Replace("=", "").Trim();
+                            // MsgBox("Final key value for boolset:  " + finalKeyValue)
+                            // Dim intKeyValue As Integer
+                            // If Integer.TryParse(finalKeyValue, intKeyValue) = True Then
+                            // MsgBox("The finalKeyValue is an int.")
+                            // End If
+                            if (booleans.Remove(key) == true)
+                            {
+                                if (finalKeyValue == "true" | finalKeyValue == "false")
+                                {
+                                    if (finalKeyValue == "true")
+                                        booleans.Add(key, true);
+                                    else if (finalKeyValue == "false")
+                                        booleans.Add(key, false);
+                                    else
+                                    {
+                                    }
+                                }
+                            }
+                        }
+
+
+
+
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+
+
+
+
+
+                    }
+                    catch (Exception ex2)
+                    {
+                        try
+                        {
+
+
+
+
+                        }
+                        catch (Exception ex3)
+                        {
+
+                        }
+                    }
+                }
+
+
+            }
         }
+
     }
-    }
+}
+                
+
+    
+
+
+    
 
 
