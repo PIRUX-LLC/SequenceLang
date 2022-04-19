@@ -13,4 +13,6 @@ string test = "Hi!"
 
 print test
 
-This is still very basic, print and string are the only working operations. More will be coming soon though.
+I recommend adding it to the PATH. See https://wpbeaches.com/how-to-add-to-the-shell-path-in-macos-using-terminal/ if you need.
+
+There is an example program called hello_world.seq.

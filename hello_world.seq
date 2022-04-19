@@ -1,0 +1,19 @@
+!! (c) 2022 PIRUX-LLC.
+print "Hello!"
+!! Using strings
+string myName = "MyName"
+!! Printing strings
+print myName
+!! Using integers
+int myAge = 1
+print myAge
+!! Modifiying integers
+myAge = 2
+print myAge
+myName = "MyMiddleName"
+print myName
+bool amIAlive = true
+print amIAlive
+
+!! This demonstrates all basic syntax options.
+!! Thanks!
