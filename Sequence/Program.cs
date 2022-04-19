@@ -19,12 +19,16 @@ namespace Sequence
 
         public static string varname;
         public static string varValue;
+        public static int linesLocation = 0;
 
         public static bool isParsing = true;
 
         static void Main(string[] args)
         {
-            Console.WriteLine(Convert.ToString(args));
+            //Console.WriteLine(Convert.ToString(args));
+            strings.Clear();
+            integers.Clear();
+            booleans.Clear();
 
             for (int i = 0; i < args.Length; i++)
             {
@@ -60,6 +64,7 @@ namespace Sequence
                     if (isParsing)
                     {
                         ParseLine(line);
+                        linesLocation = linesLocation + 1;
                     }
                     else
                     {
@@ -154,26 +159,38 @@ namespace Sequence
 
                     if (stage1.LastIndexOf("\"") != lastIndexOfStage1)
                     {
-
-                        if (stage1.EndsWith("\""))
+                        try
                         {
                             Console.WriteLine(strings[stage1].ToString().Trim());
-                        } else if (int.TryParse(stage1, out int varContentsInt))
+
+                        }
+                        catch (Exception ex)
                         {
-                            Console.WriteLine(integers[stage1].ToString().Trim());
 
-                        } else {
-                            Console.WriteLine(booleans[stage1].ToString().Trim());
-                        }
-                       
-                                    //Console.WriteLine(Constants.vbNewLine + "Sequence: Error: Couldn't parse 'print' variable " + stage1 + " because variable was non-existant in current context.");
-                                    //isParsing = false;
+                            try
+                            {
+                                Console.WriteLine(integers[stage1].ToString().Trim());
+
+                            }
+                            catch (Exception ex2)
+                            {
+
+                                try
+                                {
+                                    Console.WriteLine(booleans[stage1].ToString().Trim());
+
+                                }
+                                catch (Exception ex3)
+                                {
+
+                                    Console.WriteLine(Constants.vbNewLine + "Sequence: Error: Couldn't parse 'print' variable " + stage1 + " because variable was non-existant in current context.");
+                                    isParsing = false;
                                     //output.AppendText(Constants.vbNewLine + "Snowy: Error! Couldn't parse 'print' " + stage1 + ". Maybe the string variable dosen't exist?");
-                                
-                            
+                                }
+                            }
                         }
 
-                    
+                    }
                     else
                     {
                         if (stage1.Contains("\""))
@@ -293,151 +310,161 @@ namespace Sequence
             {
                 //Ignore. Its a comment
             }
-
-
-            else
-
+            else if (line.StartsWith("if "))
             {
-                //Console.Write("in final else block");
 
-                try
+                // Example: if [1=1] {
+
+                string arguments;
+                if (line.Contains("[") & line.Contains("]") & line.Contains("{") & line.Contains("=") == true)
                 {
-                    //testvar = ""
-                    string varname = "";
-                    string varContents = "";
-                    int equalsPosTopLevel = line.IndexOf("=");
-                    varname = line.Remove(equalsPosTopLevel).Trim();
-                    //varname = testvar
-                    varContents = line.Remove(0, equalsPosTopLevel);
-                    //varContents is: = ""
-                    varContents = varContents.Replace("=", "").Trim();
-                    //varContents is: ""
-                    //int varContentsInt = 0;
-
-                    if (varContents.StartsWith("\"") && varContents.EndsWith("\""))
+                    arguments = line.Replace("[", "").Replace("]", "").Replace("{", "").Replace("if", "").Trim();
+                    // MsgBox("Arguments for 'if' block are: " + arguments)
+                    string part1;
+                    string part2;
+                    int equalsPosition = arguments.IndexOf("=");
+                    part1 = arguments.Remove(equalsPosition).Trim();
+                    // MsgBox("Part1: " + part1)
+                    part2 = arguments.Remove(0, equalsPosition).Replace("=", "").Trim();
+                    // MsgBox("Part2: " + part2)
+                    if (part1 == part2)
                     {
-                        //String
+                        IEnumerable<string> ifLines = File.ReadLines(pathToFile);
 
-                        for (int i = 0; i <= strings.Count - 1; i++)
+                        foreach (var ifline in ifLines)
                         {
-                            string val = strings.ElementAt(i).ToString();
-                            string stage1 = val.Replace("[", "").Replace("]", "").Replace("\"", "").Replace("str", "").Trim();
-                            // MsgBox(stage1)
-                            int commaLocation = stage1.IndexOf(",");
-                            string key = stage1.Remove(commaLocation).Replace(",", "");
-                            // MsgBox(key)
-                            int equalsPos = line.IndexOf("=");
-                            string keyValue = line.Remove(0, equalsPos).Replace("\"", "").Trim();
-                            string finalKeyValue = keyValue.Replace("=", "");
-                            // MsgBox("Final key value: " + finalKeyValue)
-                            // Dim intKeyValue As Integer
-                            // If Integer.TryParse(finalKeyValue, intKeyValue) = True Then
-                            // MsgBox("The finalKeyValue is an int.")
-                            // End If
-                            if (strings.Remove(key) == true)
-                                strings.Add(key, finalKeyValue.Trim());
+
+
                         }
 
-
                     }
-                    else if (int.TryParse(varContents, out int varContentsInt))
+                }
+
+
+                else
+
+                {
+                    //Console.Write("in final else block");
+
+                    try
                     {
-                        //Integer
-                        for (int i = 0; i <= integers.Count - 1; i++)
+                        //testvar = ""
+                        string varname = "";
+                        string varContents = "";
+                        int equalsPosTopLevel = line.IndexOf("=");
+                        varname = line.Remove(equalsPosTopLevel).Trim();
+                        //varname = testvar
+                        varContents = line.Remove(0, equalsPosTopLevel);
+                        //varContents is: = ""
+                        varContents = varContents.Replace("=", "").Trim();
+                        //varContents is: ""
+                        //int varContentsInt = 0;
+
+                        if (varContents.StartsWith("\"") && varContents.EndsWith("\""))
                         {
-                            string val = integers.ElementAt(i).ToString();
-                            string stage1 = val.Replace("[", "").Replace("]", "").Replace("\"", "").Replace("str", "").Trim();
-                            // MsgBox(stage1)
-                            int commaLocation = stage1.IndexOf(",");
-                            string key = stage1.Remove(commaLocation).Replace(",", "");
-                            // MsgBox(key)
-                            int equalsPos = line.IndexOf("=");
-                            string keyValue = line.Remove(0, equalsPos).Trim();
-                            string finalKeyValue = keyValue.Replace("=", "");
-                            // MsgBox("Final key value: " + finalKeyValue)
-                            // Dim intKeyValue As Integer
-                            // If Integer.TryParse(finalKeyValue, intKeyValue) = True Then
-                            // MsgBox("The finalKeyValue is an int.")
-                            // End If
-                            if (integers.Remove(key) == true)
-                                integers.Add(key, int.Parse(finalKeyValue.Trim()));
-                        }
+                            //String
 
-
-
-
-                    }
-                    else
-                    {
-                        //Boolean
-
-                        for (int i = 0; i <= booleans.Count - 1; i++)
-                        {
-                            string val = booleans.ElementAt(i).ToString();
-                            string stage1 = val.Replace("[", "").Replace("]", "").Replace("\"", "").Replace("str", "").Trim();
-                            // MsgBox(stage1)
-                            int commaLocation = stage1.IndexOf(",");
-                            string key = stage1.Remove(commaLocation).Replace(",", "");
-                            // MsgBox(key)
-                            int equalsPos = line.IndexOf("=");
-                            string keyValue = line.Remove(0, equalsPos).Trim();
-                            string finalKeyValue = keyValue.Replace("=", "").Trim();
-                            // MsgBox("Final key value for boolset:  " + finalKeyValue)
-                            // Dim intKeyValue As Integer
-                            // If Integer.TryParse(finalKeyValue, intKeyValue) = True Then
-                            // MsgBox("The finalKeyValue is an int.")
-                            // End If
-                            if (booleans.Remove(key) == true)
+                            for (int i = 0; i <= strings.Count - 1; i++)
                             {
-                                if (finalKeyValue == "true" | finalKeyValue == "false")
+                                string val = strings.ElementAt(i).ToString();
+                                string stage1 = val.Replace("[", "").Replace("]", "").Replace("\"", "").Replace("str", "").Trim();
+                                // MsgBox(stage1)
+                                int commaLocation = stage1.IndexOf(",");
+                                string key = stage1.Remove(commaLocation).Replace(",", "");
+                                // MsgBox(key)
+                                int equalsPos = line.IndexOf("=");
+                                string keyValue = line.Remove(0, equalsPos).Replace("\"", "").Trim();
+                                string finalKeyValue = keyValue.Replace("=", "");
+                                // MsgBox("Final key value: " + finalKeyValue)
+                                // Dim intKeyValue As Integer
+                                // If Integer.TryParse(finalKeyValue, intKeyValue) = True Then
+                                // MsgBox("The finalKeyValue is an int.")
+                                // End If
+                                if (strings.Remove(key) == true)
+                                    strings.Add(key, finalKeyValue.Trim());
+                            }
+
+
+                        }
+                        else if (int.TryParse(varContents, out int varContentsInt))
+                        {
+                            //Integer
+                            for (int i = 0; i <= integers.Count - 1; i++)
+                            {
+                                string val = integers.ElementAt(i).ToString();
+                                string stage1 = val.Replace("[", "").Replace("]", "").Replace("\"", "").Replace("str", "").Trim();
+                                // MsgBox(stage1)
+                                int commaLocation = stage1.IndexOf(",");
+                                string key = stage1.Remove(commaLocation).Replace(",", "");
+                                // MsgBox(key)
+                                int equalsPos = line.IndexOf("=");
+                                string keyValue = line.Remove(0, equalsPos).Trim();
+                                string finalKeyValue = keyValue.Replace("=", "");
+                                // MsgBox("Final key value: " + finalKeyValue)
+                                // Dim intKeyValue As Integer
+                                // If Integer.TryParse(finalKeyValue, intKeyValue) = True Then
+                                // MsgBox("The finalKeyValue is an int.")
+                                // End If
+                                if (integers.Remove(key) == true)
+                                    integers.Add(key, int.Parse(finalKeyValue.Trim()));
+                            }
+
+
+
+
+                        }
+                        else
+                        {
+                            //Boolean
+
+                            for (int i = 0; i <= booleans.Count - 1; i++)
+                            {
+                                string val = booleans.ElementAt(i).ToString();
+                                string stage1 = val.Replace("[", "").Replace("]", "").Replace("\"", "").Replace("str", "").Trim();
+                                // MsgBox(stage1)
+                                int commaLocation = stage1.IndexOf(",");
+                                string key = stage1.Remove(commaLocation).Replace(",", "");
+                                // MsgBox(key)
+                                int equalsPos = line.IndexOf("=");
+                                string keyValue = line.Remove(0, equalsPos).Trim();
+                                string finalKeyValue = keyValue.Replace("=", "").Trim();
+                                // MsgBox("Final key value for boolset:  " + finalKeyValue)
+                                // Dim intKeyValue As Integer
+                                // If Integer.TryParse(finalKeyValue, intKeyValue) = True Then
+                                // MsgBox("The finalKeyValue is an int.")
+                                // End If
+                                if (booleans.Remove(key) == true)
                                 {
-                                    if (finalKeyValue == "true")
-                                        booleans.Add(key, true);
-                                    else if (finalKeyValue == "false")
-                                        booleans.Add(key, false);
-                                    else
+                                    if (finalKeyValue == "true" | finalKeyValue == "false")
                                     {
+                                        if (finalKeyValue == "true")
+                                            booleans.Add(key, true);
+                                        else if (finalKeyValue == "false")
+                                            booleans.Add(key, false);
+                                        else
+                                        {
+                                        }
                                     }
                                 }
                             }
+
+
+
+
+
                         }
-
-
-
-
-
                     }
-                }
-                catch (Exception ex)
-                {
-                    try
+                    catch (Exception ex)
                     {
-
-
-
-
-
+                        Console.WriteLine("Sequence: Error! The command " + line + " is unrecognized syntax.");
+                        isParsing = false;
                     }
-                    catch (Exception ex2)
-                    {
-                        try
-                        {
 
 
-
-
-                        }
-                        catch (Exception ex3)
-                        {
-
-                        }
-                    }
                 }
-
-
             }
-        }
 
+        }
     }
 }
                 
