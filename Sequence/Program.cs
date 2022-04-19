@@ -34,6 +34,14 @@ namespace Sequence
             {
                 //Console.WriteLine(args[i]);
                 pathToFile = args[i];
+                if (pathToFile.EndsWith(".seq"))
+                {
+                    //Console.WriteLine("VALID");
+                } else
+                {
+                    Console.WriteLine("Incorrect file extension!");
+                    isParsing = false;
+                }
 
 
             }
@@ -41,7 +49,7 @@ namespace Sequence
             if (Convert.ToString(args[0]) == "System.String[]")
             {
                 //Like Python cmd line.
-                consoleCommand();
+                //consoleCommand();
             }
             else
             {
@@ -52,8 +60,15 @@ namespace Sequence
                     //Console.WriteLine(args[i]);
                     pathToFile = args[i];
 
+                    if(pathToFile == "")
+                    {
+                        Console.WriteLine("Sequence: Compiler!: No valid path to parse.");
+                        isParsing = false;
+                    }
+
 
                 }
+
 
                 IEnumerable<string> lines = File.ReadLines(pathToFile);
                 //Console.WriteLine(String.Join(Environment.NewLine, lines));
