@@ -13,4 +13,19 @@ string test = "Hi!"
 
 print test
 
-This is still very basic, print and string are the only working operations. More will be coming soon though.
+Example Program:
+
+print "Hello"
+string name = "Fred"
+print "Name:"
+print name
+print "Changing name:"
+name = "Bob"
+print "Bob"
+int BobsAge = 49
+print "Bob's Age:"
+print BobsAge
+bool isBobAlive = true
+print "Is Bob alive?"
+print isBobAlive
+
