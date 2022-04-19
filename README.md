@@ -13,31 +13,6 @@ string test = "Hi!"
 
 print test
 
-Example Program:
+I recommend adding it to the PATH. See https://wpbeaches.com/how-to-add-to-the-shell-path-in-macos-using-terminal/ if you need.
 
-print "Hello"
-
-string name = "Fred"
-
-print "Name:"
-
-print name
-print "Changing name:"
-
-name = "Bob"
-
-print "Bob"
-
-int BobsAge = 49
-
-print "Bob's Age:"
-
-print BobsAge
-
-bool isBobAlive = true
-
-print "Is Bob alive?"
-
-print isBobAlive
-
-
+There is an example program called hello_world.seq.
